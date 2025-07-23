@@ -1,92 +1,66 @@
-/* style.css für Club 40 Beamer-Anzeige */
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club 40 Playlist</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    async function fetchData() {
+      try {
+        const playlistRes = await fetch("https://club-40-2-playlist.onrender.com/playlist");
+        const nowPlayingRes = await fetch("https://club-40-2-playlist.onrender.com/now-playing");
+        const upNextRes = await fetch("https://club-40-2-playlist.onrender.com/up-next");
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #111;
-  color: #fff;
-}
+        const playlist = await playlistRes.json();
+        const nowPlaying = await nowPlayingRes.json();
+        const upNext = await upNextRes.json();
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  background: #222;
-  border-bottom: 2px solid #444;
-}
+        document.getElementById("playlist-name").textContent = playlist.name;
+        document.getElementById("cover-now").src = nowPlaying.image;
+        document.getElementById("now-title").textContent = nowPlaying.name;
+        document.getElementById("now-artist").textContent = nowPlaying.artist;
 
-#logo {
-  max-height: 80px;
-  border-radius: 10px;
-}
+        const nextList = document.getElementById("next-tracks");
+        nextList.innerHTML = "";
+        upNext.tracks.forEach(track => {
+          const div = document.createElement("div");
+          div.className = "next-track";
+          div.innerHTML = `<strong>${track.name}</strong> – ${track.artist}`;
+          nextList.appendChild(div);
+        });
+      } catch (e) {
+        console.error("Fehler beim Laden der Daten:", e);
+      }
+    }
 
-#playlist-name {
-  font-size: 2em;
-  margin: 0;
-  color: #1DB954;
-}
+    setInterval(fetchData, 5000);
+    window.onload = fetchData;
+  </script>
+</head>
+<body>
+  <header>
+    <h1 id="playlist-name">Club 40 Playlist</h1>
+    <img id="logo" src="assets/Club_40.jpeg" alt="Club Logo">
+  </header>
 
-main {
-  padding: 30px;
-  text-align: center;
-}
+  <main>
+    <section class="now-playing">
+      <h2>Gerade läuft</h2>
+      <img id="cover-now" class="cover" src="" alt="Cover">
+      <div class="song-info">
+        <h3 id="now-title">Titel</h3>
+        <p id="now-artist">Interpret</p>
+      </div>
+      <div class="progress">
+        <div id="progress-bar"></div>
+      </div>
+    </section>
 
-.now-playing h2,
-.up-next h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #1DB954;
-}
-
-.cover {
-  max-width: 250px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  margin: 20px auto;
-}
-
-.song-info h3 {
-  font-size: 1.8em;
-  margin: 0;
-}
-
-.song-info p {
-  font-size: 1.2em;
-  color: #aaa;
-}
-
-.progress {
-  background: #333;
-  height: 10px;
-  width: 60%;
-  margin: 20px auto;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-#progress-bar {
-  background: #1DB954;
-  height: 100%;
-  width: 0%;
-  transition: width 1s;
-}
-
-#next-tracks {
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-.next-track {
-  background: #222;
-  padding: 10px 20px;
-  border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
-  text-align: left;
-  font-size: 1.1em;
-  border-left: 4px solid #1DB954;
-}
+    <section class="up-next">
+      <h2>Als Nächstes</h2>
+      <div id="next-tracks"></div>
+    </section>
+  </main>
+</body>
+</html>
