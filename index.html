@@ -3,70 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Club 40 Playlist</title>
+  <title>Club 40² Beameranzeige</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    async function fetchData() {
-      try {
-        const playlistRes = await fetch("https://club-40-2-playlist.onrender.com/playlist");
-        const nowPlayingRes = await fetch("https://club-40-2-playlist.onrender.com/now-playing");
-        const upNextRes = await fetch("https://club-40-2-playlist.onrender.com/up-next");
-
-        const playlist = await playlistRes.json();
-        const nowPlaying = await nowPlayingRes.json();
-        const upNext = await upNextRes.json();
-
-        document.getElementById("playlist-name").textContent = playlist.name;
-        document.getElementById("cover-now").src = nowPlaying.image;
-        document.getElementById("now-title").textContent = nowPlaying.name;
-        document.getElementById("now-artist").textContent = nowPlaying.artist;
-
-        const nextList = document.getElementById("next-tracks");
-        nextList.innerHTML = "";
-        upNext.tracks.forEach(track => {
-          const div = document.createElement("div");
-          div.className = "next-track";
-          div.innerHTML = `
-            <img src="${track.image || ''}" alt="Cover">
-            <div>
-              <strong>${track.name}</strong><br>
-              ${track.artist}
-            </div>
-          `;
-          nextList.appendChild(div);
-        });
-
-      } catch (e) {
-        console.error("Fehler beim Laden der Daten:", e);
-      }
-    }
-
-    setInterval(fetchData, 5000);
-    window.onload = fetchData;
-  </script>
 </head>
 <body>
-  <header>
-    <h1 id="playlist-name">Club 40 Playlist</h1>
-    <img id="logo" src="assets/Club_40.jpeg" alt="Club Logo">
-  </header>
+  <div id="left">
+    <header>
+      <h1 id="playlist-name">Club 40² Party Playlist</h1>
+    </header>
 
-  <main>
-    <section class="now-playing">
-      <img id="cover-now" class="cover" src="" alt="Cover">
-      <div class="song-info">
-        <h3 id="now-title">Titel</h3>
-        <p id="now-artist">Interpret</p>
+    <main>
+      <div class="now-playing">
+        <img src="" alt="Aktueller Song Cover" class="cover" id="current-cover">
+        <div class="song-info">
+          <h3 id="current-title">Titel</h3>
+          <p id="current-artist">Interpret</p>
+        </div>
+        <div class="progress">
+          <div id="progress-bar"></div>
+        </div>
       </div>
-      <div class="progress">
-        <div id="progress-bar"></div>
-      </div>
-    </section>
 
-    <section class="up-next">
-      <h2>Playlist</h2>
-      <div id="next-tracks"></div>
-    </section>
-  </main>
+      <div class="up-next">
+        <h2>Playlist</h2>
+        <div id="next-tracks"></div>
+      </div>
+    </main>
+  </div>
+
+  <div id="right">
+    <img src="assets/Club_40.jpeg" alt="Club 40 Logo" id="logo">
+  </div>
+
+  <script>
+    async function fetchNowPlaying() {
+      const res = await fetch("https://club-40-2-playlist.onrender.com/now-playing");
+      const data = await res.json();
+      if (data.status === "no music playing") return;
+      document.getElementById("current-title").textContent = data.name;
+      document.getElementById("current-artist").textContent = data.artist;
+      document.getElementById("current-cover").src = data.image;
+    }
+
+    async function fetchPlaylist() {
+      const res = await fetch("https://club-40-2-playlist.onrender.com/up-next");
+      const data = await res.json();
+      const container = document.getElementById("next-tracks");
+      container.innerHTML = "";
+      data.tracks.forEach(t => {
+        const track = document.createElement("div");
+        track.className = "next-track";
+
+        const img = document.createElement("img");
+        img.src = t.image || "";
+        img.alt = "Cover";
+
+        const info = document.createElement("div");
+        info.innerHTML = `<strong>${t.name}</strong><br><span>${t.artist}</span>`;
+
+        track.appendChild(img);
+        track.appendChild(info);
+        container.appendChild(track);
+      });
+    }
+
+    async function update() {
+      await fetchNowPlaying();
+      await fetchPlaylist();
+    }
+
+    update();
+    setInterval(update, 10000);
+  </script>
 </body>
 </html>
