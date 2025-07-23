@@ -26,9 +26,16 @@
         upNext.tracks.forEach(track => {
           const div = document.createElement("div");
           div.className = "next-track";
-          div.innerHTML = `<strong>${track.name}</strong> – ${track.artist}`;
+          div.innerHTML = `
+            <img src="${track.image || ''}" alt="Cover">
+            <div>
+              <strong>${track.name}</strong><br>
+              ${track.artist}
+            </div>
+          `;
           nextList.appendChild(div);
         });
+
       } catch (e) {
         console.error("Fehler beim Laden der Daten:", e);
       }
@@ -46,7 +53,6 @@
 
   <main>
     <section class="now-playing">
-      <h2>Gerade läuft</h2>
       <img id="cover-now" class="cover" src="" alt="Cover">
       <div class="song-info">
         <h3 id="now-title">Titel</h3>
@@ -58,7 +64,7 @@
     </section>
 
     <section class="up-next">
-      <h2>Als Nächstes</h2>
+      <h2>Playlist</h2>
       <div id="next-tracks"></div>
     </section>
   </main>
