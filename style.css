@@ -10,14 +10,14 @@ body {
 header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   background: #222;
   border-bottom: 2px solid #444;
 }
 
 #logo {
-  max-height: 80px;
+  max-height: 250px;
   border-radius: 10px;
 }
 
@@ -32,22 +32,15 @@ main {
   text-align: center;
 }
 
-.now-playing h2,
-.up-next h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #1DB954;
-}
-
 .cover {
-  max-width: 250px;
+  max-width: 300px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   margin: 20px auto;
 }
 
 .song-info h3 {
-  font-size: 1.8em;
+  font-size: 2em;
   margin: 0;
 }
 
@@ -89,4 +82,15 @@ main {
   text-align: left;
   font-size: 1.1em;
   border-left: 4px solid #1DB954;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.next-track img {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
