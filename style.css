@@ -1,4 +1,4 @@
-/* style.css für Club 40 Beamer-Anzeige */
+margin-bottom: 10px;/* style.css für Club 40 Beamer-Anzeige */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -37,7 +37,7 @@ body {
   max-height: 90vh;
   object-fit: contain;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
 /* Header */
@@ -45,7 +45,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px; /* ↓ Abstand reduziert */
+  
+  margin-bottom: 2vh;
 }
 
 #playlist-name {
@@ -75,7 +76,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 0; /* ↑ zusätzlicher Abstand entfernt */
 }
 
 .now-playing {
@@ -83,15 +83,13 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: 0; /* ↑ zusätzlicher Abstand entfernt */
 }
 
 .cover {
-  max-width: 50%; /* kleineres Cover */
+  max-width: 50%;
   height: auto;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-  margin-top: 0;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
   margin-bottom: 30px;
 }
 
