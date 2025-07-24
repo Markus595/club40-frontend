@@ -18,7 +18,7 @@
 
     <main>
       <section class="now-playing">
-        <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
+        <img src="" alt="Aktuelles Cover" class="cover large" id="now-cover" />
         <div class="song-info">
           <h3 id="now-title">Lade Titel...</h3>
           <p id="now-artist"></p>
@@ -28,7 +28,7 @@
         </div>
         <div id="time-labels">
           <span id="current-time">0:00</span>
-          <span id="total-time">0:00</span>
+          <span id="duration">0:00</span>
         </div>
       </section>
     </main>
@@ -39,13 +39,6 @@
   </div>
 
   <script>
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }
-
     async function fetchData() {
       try {
         const now = await fetch("https://club-40-2-playlist.onrender.com/now-playing").then(res => res.json());
@@ -54,19 +47,6 @@
           document.getElementById("now-title").textContent = now.name;
           document.getElementById("now-artist").textContent = now.artist;
           document.getElementById("now-cover").src = now.image || "";
-
-          const progressBar = document.getElementById("progress-bar");
-          const currentTime = document.getElementById("current-time");
-          const totalTime = document.getElementById("total-time");
-
-          const progressMs = now.progress_ms || 0;
-          const durationMs = now.duration_ms || 1;
-
-          const progressPercent = (progressMs / durationMs) * 100;
-          progressBar.style.width = progressPercent + "%";
-
-          currentTime.textContent = formatTime(progressMs);
-          totalTime.textContent = formatTime(durationMs);
         } else {
           console.log("Keine Musik läuft.");
         }
@@ -75,8 +55,44 @@
       }
     }
 
+    async function updateProgress() {
+      try {
+        const res = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+          headers: {
+            Authorization: "Bearer " + YOUR_ACCESS_TOKEN // <-- Setze Token dynamisch im Backend
+          }
+        });
+
+        if (!res.ok || res.status === 204) return;
+
+        const data = await res.json();
+        const progress = data.progress_ms;
+        const duration = data.item.duration_ms;
+
+        const bar = document.getElementById("progress-bar");
+        const currentTime = document.getElementById("current-time");
+        const totalTime = document.getElementById("duration");
+
+        const percent = (progress / duration) * 100;
+        bar.style.width = percent + "%";
+
+        const formatTime = ms => {
+          const minutes = Math.floor(ms / 60000);
+          const seconds = Math.floor((ms % 60000) / 1000);
+          return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        };
+
+        currentTime.textContent = formatTime(progress);
+        totalTime.textContent = formatTime(duration);
+
+      } catch (error) {
+        console.error("Fehler beim Fortschrittsabruf:", error);
+      }
+    }
+
     fetchData();
-    setInterval(fetchData, 5000);
+    setInterval(fetchData, 10000);
+    setInterval(updateProgress, 3000);
   </script>
 </body>
 </html>
