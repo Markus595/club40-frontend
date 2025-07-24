@@ -45,7 +45,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 4vh;
+  margin-bottom: 2vh;
 }
 
 #playlist-name {
