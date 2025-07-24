@@ -18,17 +18,20 @@
 
     <main>
       <section class="now-playing">
-        <img src="" alt="Aktuelles Cover" class="cover large" id="now-cover" />
+        <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
         <div class="song-info">
           <h3 id="now-title">Lade Titel...</h3>
           <p id="now-artist"></p>
         </div>
-        <div class="progress">
-          <div id="progress-bar"></div>
-        </div>
-        <div id="time-labels">
-          <span id="current-time">0:00</span>
-          <span id="duration">0:00</span>
+
+        <div class="progress-container">
+          <div class="progress">
+            <div id="progress-bar"></div>
+          </div>
+          <div id="time-labels">
+            <span id="progress-start">0:00</span>
+            <span id="progress-end">0:00</span>
+          </div>
         </div>
       </section>
     </main>
@@ -41,58 +44,38 @@
   <script>
     async function fetchData() {
       try {
-        const now = await fetch("https://club-40-2-playlist.onrender.com/now-playing").then(res => res.json());
+        const res = await fetch("https://club-40-2-playlist.onrender.com/now-playing");
+        const now = await res.json();
 
         if (now.name) {
           document.getElementById("now-title").textContent = now.name;
           document.getElementById("now-artist").textContent = now.artist;
           document.getElementById("now-cover").src = now.image || "";
-        } else {
-          console.log("Keine Musik läuft.");
+
+          if (now.progress_ms && now.duration_ms) {
+            const progress = now.progress_ms;
+            const duration = now.duration_ms;
+            const percent = (progress / duration) * 100;
+
+            document.getElementById("progress-bar").style.width = `${percent}%`;
+            document.getElementById("progress-start").textContent = formatTime(progress);
+            document.getElementById("progress-end").textContent = formatTime(duration);
+          }
         }
       } catch (err) {
         console.error("Fehler beim Laden der Daten:", err);
       }
     }
 
-    async function updateProgress() {
-      try {
-        const res = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
-          headers: {
-            Authorization: "Bearer " + YOUR_ACCESS_TOKEN // <-- Setze Token dynamisch im Backend
-          }
-        });
-
-        if (!res.ok || res.status === 204) return;
-
-        const data = await res.json();
-        const progress = data.progress_ms;
-        const duration = data.item.duration_ms;
-
-        const bar = document.getElementById("progress-bar");
-        const currentTime = document.getElementById("current-time");
-        const totalTime = document.getElementById("duration");
-
-        const percent = (progress / duration) * 100;
-        bar.style.width = percent + "%";
-
-        const formatTime = ms => {
-          const minutes = Math.floor(ms / 60000);
-          const seconds = Math.floor((ms % 60000) / 1000);
-          return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        };
-
-        currentTime.textContent = formatTime(progress);
-        totalTime.textContent = formatTime(duration);
-
-      } catch (error) {
-        console.error("Fehler beim Fortschrittsabruf:", error);
-      }
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     }
 
     fetchData();
-    setInterval(fetchData, 10000);
-    setInterval(updateProgress, 3000);
+    setInterval(fetchData, 5000);
   </script>
 </body>
 </html>
