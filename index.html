@@ -67,6 +67,8 @@
 
           currentTime.textContent = formatTime(progressMs);
           totalTime.textContent = formatTime(durationMs);
+        } else {
+          console.log("Keine Musik läuft.");
         }
       } catch (err) {
         console.error("Fehler beim Laden der Daten:", err);
