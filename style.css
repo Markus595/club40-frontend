@@ -11,36 +11,43 @@ body {
 }
 
 #left {
-  flex: 1;
+  flex: 6;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 2vw;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 #right {
-  width: 300px;
+  flex: 4;
   background: #222;
   display: flex;
   align-items: center;
   justify-content: center;
   border-left: 2px solid #444;
+  overflow: hidden;
 }
 
 #logo {
-  max-height: 90%;
-  max-width: 90%;
+  max-height: 95%;
+  max-width: 95%;
+  height: auto;
+  width: auto;
   border-radius: 10px;
+  object-fit: contain;
 }
 
 header {
-  padding-bottom: 20px;
+  padding-bottom: 2vh;
 }
 
 #playlist-name {
-  font-size: 2em;
+  font-size: 2.5vw;
   margin: 0;
-  color: #1DB954;
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 .now-playing {
@@ -48,27 +55,28 @@ header {
 }
 
 .cover {
-  max-width: 300px;
+  max-width: 30vw;
+  width: 100%;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  margin: 20px auto;
+  box-shadow: 0 0 2vw rgba(0, 0, 0, 0.5);
+  margin: 3vh auto;
 }
 
 .song-info h3 {
-  font-size: 2em;
+  font-size: 2.5vw;
   margin: 0;
 }
 
 .song-info p {
-  font-size: 1.2em;
+  font-size: 1.5vw;
   color: #aaa;
 }
 
 .progress {
   background: #333;
-  height: 10px;
+  height: 1.2vh;
   width: 60%;
-  margin: 20px auto;
+  margin: 3vh auto;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -81,12 +89,12 @@ header {
 }
 
 .up-next {
-  margin-top: 30px;
+  margin-top: 4vh;
 }
 
 .up-next h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
+  font-size: 2vw;
+  margin-bottom: 2vh;
   color: #1DB954;
   text-align: center;
 }
@@ -94,27 +102,28 @@ header {
 #next-tracks {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1.5vh;
   align-items: center;
 }
 
 .next-track {
   background: #222;
-  padding: 10px 20px;
+  padding: 1vh 2vw;
   border-radius: 8px;
-  max-width: 500px;
   width: 100%;
+  max-width: 90%;
   text-align: left;
-  font-size: 1.1em;
+  font-size: 1.2vw;
   border-left: 4px solid #1DB954;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 1vw;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 .next-track img {
-  width: 50px;
-  height: 50px;
+  width: 4vw;
+  height: 4vw;
   border-radius: 6px;
   object-fit: cover;
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
