@@ -60,8 +60,9 @@ header {
 }
 
 #qr-section img {
-  width: 120px;
-  height: 120px;
+  width: 12vw;              /* Dynamisch – ca. 1/4 der Coverbreite */
+  max-width: 120px;         /* Begrenzung auf sinnvolle Größe */
+  height: auto;             /* Höhe automatisch passend zur Breite */
 }
 
 #qr-section p {
