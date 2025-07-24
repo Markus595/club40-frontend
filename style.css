@@ -15,7 +15,7 @@ body {
   flex: 6;
   display: flex;
   flex-direction: column;
-  padding: 2vw;
+  padding: 2vh 2vw; /* oben/unten Puffer */
   box-sizing: border-box;
   position: relative;
   height: 100vh;
@@ -81,6 +81,7 @@ main {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  padding-bottom: 2vh; /* extra Abstand unten */
 }
 
 /* Aktueller Song */
@@ -134,4 +135,7 @@ main {
   color: #888;
 }
 
-/
+/* Nicht genutzte Playlist-Anzeige ausblenden */
+.up-next, #next-tracks, .next-track {
+  display: none;
+}
