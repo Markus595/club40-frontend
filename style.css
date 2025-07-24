@@ -1,5 +1,4 @@
-/* style.css für Club 40² Beamer-Anzeige */
-
+/* Global */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -38,7 +37,7 @@ body {
   max-height: 90vh;
   object-fit: contain;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 /* Header */
@@ -53,7 +52,6 @@ header {
   font-size: 3vw;
   font-weight: 700;
   color: #fff;
-  text-shadow: 1px 1px 3px #000;
 }
 
 #qr-section {
@@ -68,8 +66,8 @@ header {
 #qr-section p {
   margin-top: 5px;
   color: #fff;
-  font-size: 1em;
   font-weight: bold;
+  font-size: 0.95em;
 }
 
 /* Now Playing */
@@ -79,38 +77,41 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 2vh;
 }
 
 .cover {
-  max-width: 70%;
+  max-width: 60%;
   height: auto;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
   margin-bottom: 20px;
 }
 
+/* Song Info zentriert */
 .song-info {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .song-info h3 {
-  font-size: 2.5vw;
-  margin: 10px 0 5px 0;
+  font-size: 2.2em;
+  margin-bottom: 5px;
 }
 
 .song-info p {
-  font-size: 1.5vw;
+  font-size: 1.3em;
   color: #ccc;
-  margin: 0 0 10px 0;
 }
 
-/* Fortschrittsanzeige */
+/* Fortschrittsbalken + Zeiten */
 .progress {
   background: #333;
   height: 10px;
   width: 60%;
-  margin: 10px auto;
+  max-width: 500px;
+  margin: 20px auto 5px;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -126,47 +127,8 @@ main {
   display: flex;
   justify-content: space-between;
   width: 60%;
-  font-size: 0.9em;
+  max-width: 500px;
+  font-size: 0.95em;
   color: #aaa;
-  margin-top: 5px;
-}
-
-/* Mobile Anpassung */
-@media (max-width: 900px) {
-  body {
-    flex-direction: column;
-  }
-
-  #left, #right {
-    width: 100%;
-  }
-
-  #logo {
-    max-height: 200px;
-  }
-
-  .cover {
-    max-width: 80%;
-  }
-
-  #playlist-name {
-    font-size: 6vw;
-  }
-
-  .song-info h3 {
-    font-size: 5vw;
-  }
-
-  .song-info p {
-    font-size: 3.5vw;
-  }
-
-  #time-labels {
-    width: 80%;
-    font-size: 0.8em;
-  }
-
-  .progress {
-    width: 80%;
-  }
+  margin-bottom: 20px;
 }
