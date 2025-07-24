@@ -1,141 +1,121 @@
 /* style.css für Club 40 Beamer-Anzeige */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background-color: #111;
   color: #fff;
-  display: flex;
   height: 100vh;
+  display: flex;
   overflow: hidden;
 }
 
-/* Linke Seite */
+/* Layout */
 #left {
-  flex: 6;
+  width: 60%;
+  padding: 3vh 3vw;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: 2vh 2vw; /* oben/unten Puffer */
-  box-sizing: border-box;
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
+  justify-content: flex-start;
 }
 
-/* Rechte Seite */
 #right {
-  flex: 4;
-  background: #222;
+  width: 40%;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 2px solid #444;
-  overflow: hidden;
 }
 
 #logo {
-  max-height: 95%;
-  max-width: 95%;
-  height: auto;
-  width: auto;
-  border-radius: 10px;
+  max-width: 90%;
+  max-height: 90vh;
   object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
-/* Header und Playlist-Name */
+/* Header */
 header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-bottom: 2vh;
+  margin-bottom: 2vh;
 }
 
 #playlist-name {
-  font-size: 2.8vw;
-  margin: 0;
-  color: white;
-  font-weight: bold;
-  letter-spacing: 1px;
+  font-size: 3vw;
+  font-weight: 700;
+  color: #fff;
 }
 
-/* QR-Code oben rechts */
 #qr-section {
   text-align: center;
 }
 
 #qr-section img {
-  width: 6vw;
-  height: 6vw;
+  width: 120px;
+  height: 120px;
 }
 
 #qr-section p {
-  font-size: 1vw;
+  margin-top: 5px;
   color: #1DB954;
-  margin-top: 0.5vh;
+  font-size: 0.9em;
 }
 
-/* Hauptbereich */
+/* Now Playing */
 main {
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding-bottom: 2vh; /* extra Abstand unten */
-}
-
-/* Aktueller Song */
-.now-playing {
-  text-align: center;
-  flex-shrink: 0;
 }
 
 .cover {
-  max-width: 30vw;
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 0 2vw rgba(0, 0, 0, 0.5);
-  margin: 3vh auto;
+  max-width: 60%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  margin-bottom: 20px;
 }
 
 .song-info h3 {
-  font-size: 2.5vw;
-  margin: 0;
+  font-size: 2em;
+  margin-bottom: 5px;
 }
 
 .song-info p {
-  font-size: 1.5vw;
-  color: #aaa;
+  font-size: 1.2em;
+  color: #ccc;
 }
 
-/* Fortschrittsbalken + Zeit */
 .progress {
   background: #333;
-  height: 1.2vh;
+  height: 10px;
   width: 60%;
-  margin: 2vh auto;
+  margin: 20px 0 5px;
   border-radius: 5px;
   overflow: hidden;
-  position: relative;
 }
 
 #progress-bar {
   background: #1DB954;
   height: 100%;
   width: 0%;
-  transition: width 1s;
+  transition: width 0.5s;
 }
 
 #time-labels {
   display: flex;
   justify-content: space-between;
   width: 60%;
-  margin: 0 auto 2vh auto;
-  font-size: 1vw;
-  color: #888;
-}
-
-/* Nicht genutzte Playlist-Anzeige ausblenden */
-.up-next, #next-tracks, .next-track {
-  display: none;
+  font-size: 0.9em;
+  color: #aaa;
 }
