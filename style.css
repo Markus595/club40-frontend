@@ -1,4 +1,4 @@
-/* Club 40 Beamer-Anzeige – responsive & zentriert */
+/* style.css für Club 40 Beamer-Anzeige */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -14,17 +14,16 @@ body {
   overflow: hidden;
 }
 
-/* Linke Seite */
+/* Layout */
 #left {
   width: 60%;
-  padding: 2vh 2vw;
+  padding: 4vh 4vw;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  overflow-y: auto;
 }
 
-/* Rechte Seite */
 #right {
   width: 40%;
   background: #000;
@@ -46,12 +45,13 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 2vh;
+  margin-bottom: 4vh;
 }
 
 #playlist-name {
   font-size: 2.5vw;
-  font-weight: bold;
+  font-weight: 700;
+  color: #fff;
 }
 
 #qr-section {
@@ -59,60 +59,67 @@ header {
 }
 
 #qr-section img {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
 }
 
 #qr-section p {
   margin-top: 5px;
-  color: #1DB954;
-  font-size: 0.9em;
+  color: #fff;
+  font-size: 1em;
   font-weight: bold;
 }
 
 /* Now Playing */
 main {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+}
+
+.now-playing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .cover {
-  max-width: 45%;
+  max-width: 70%;
+  height: auto;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.6);
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-/* Songinfos */
 .song-info {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 
 .song-info h3 {
-  font-size: 1.8em;
+  font-size: 2em;
   font-weight: bold;
+  margin-bottom: 0.5em;
 }
 
 .song-info p {
-  font-size: 1.1em;
+  font-size: 1.2em;
   color: #ccc;
 }
 
 /* Fortschritt */
 .progress-container {
   width: 60%;
-  margin-top: 10px;
 }
 
 .progress {
   background: #333;
-  height: 8px;
+  height: 10px;
   border-radius: 5px;
   overflow: hidden;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 #progress-bar {
@@ -125,7 +132,7 @@ main {
 #time-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85em;
+  font-size: 0.9em;
   color: #aaa;
-  margin-top: 5px;
+  margin-top: 10px;
 }
