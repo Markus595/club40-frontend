@@ -102,7 +102,33 @@ main {
 .song-info p {
   font-size: 1.5vw;
   color: #ccc;
-  margin: 0;
+  margin: 0 0 10px 0;
+}
+
+/* Fortschrittsanzeige */
+.progress {
+  background: #333;
+  height: 10px;
+  width: 60%;
+  margin: 10px auto;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  background: #1DB954;
+  height: 100%;
+  width: 0%;
+  transition: width 0.5s;
+}
+
+#time-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  font-size: 0.9em;
+  color: #aaa;
+  margin-top: 5px;
 }
 
 /* Mobile Anpassung */
@@ -133,5 +159,14 @@ main {
 
   .song-info p {
     font-size: 3.5vw;
+  }
+
+  #time-labels {
+    width: 80%;
+    font-size: 0.8em;
+  }
+
+  .progress {
+    width: 80%;
   }
 }
