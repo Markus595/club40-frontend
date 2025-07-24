@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Club 40² Beameranzeige</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Club 40² Party Playlist</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="left">
@@ -13,67 +13,69 @@
     </header>
 
     <main>
-      <div class="now-playing">
-        <img src="" alt="Aktueller Song Cover" class="cover" id="current-cover">
+      <section class="now-playing">
+        <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
         <div class="song-info">
-          <h3 id="current-title">Titel</h3>
-          <p id="current-artist">Interpret</p>
+          <h3 id="now-title">Lade Titel...</h3>
+          <p id="now-artist"></p>
         </div>
         <div class="progress">
           <div id="progress-bar"></div>
         </div>
-      </div>
+      </section>
 
-      <div class="up-next">
+      <section class="up-next">
         <h2>Playlist</h2>
         <div id="next-tracks"></div>
-      </div>
+      </section>
     </main>
   </div>
 
   <div id="right">
-    <img src="assets/Club_40.jpeg" alt="Club 40 Logo" id="logo">
+    <img src="assets/Club_40.jpeg" alt="Club 40 Logo" id="logo" />
   </div>
 
   <script>
-    async function fetchNowPlaying() {
-      const res = await fetch("https://club-40-2-playlist.onrender.com/now-playing");
-      const data = await res.json();
-      if (data.status === "no music playing") return;
-      document.getElementById("current-title").textContent = data.name;
-      document.getElementById("current-artist").textContent = data.artist;
-      document.getElementById("current-cover").src = data.image;
+    async function fetchData() {
+      try {
+        const now = await fetch("https://club-40-2-playlist.onrender.com/now-playing").then(res => res.json());
+        const playlist = await fetch("https://club-40-2-playlist.onrender.com/up-next").then(res => res.json());
+
+        if (now.name) {
+          document.getElementById("now-title").textContent = now.name;
+          document.getElementById("now-artist").textContent = now.artist;
+          document.getElementById("now-cover").src = now.image || "";
+        }
+
+        const trackList = document.getElementById("next-tracks");
+        trackList.innerHTML = "";
+        playlist.tracks.forEach(track => {
+          const div = document.createElement("div");
+          div.className = "next-track";
+
+          const img = document.createElement("img");
+          img.src = track.image || "";
+          img.alt = "Cover";
+
+          const info = document.createElement("div");
+          const title = document.createElement("strong");
+          title.textContent = track.name;
+          const artist = document.createElement("p");
+          artist.textContent = track.artist;
+
+          info.appendChild(title);
+          info.appendChild(artist);
+          div.appendChild(img);
+          div.appendChild(info);
+          trackList.appendChild(div);
+        });
+      } catch (err) {
+        console.error("Fehler beim Laden der Daten:", err);
+      }
     }
 
-    async function fetchPlaylist() {
-      const res = await fetch("https://club-40-2-playlist.onrender.com/up-next");
-      const data = await res.json();
-      const container = document.getElementById("next-tracks");
-      container.innerHTML = "";
-      data.tracks.forEach(t => {
-        const track = document.createElement("div");
-        track.className = "next-track";
-
-        const img = document.createElement("img");
-        img.src = t.image || "";
-        img.alt = "Cover";
-
-        const info = document.createElement("div");
-        info.innerHTML = `<strong>${t.name}</strong><br><span>${t.artist}</span>`;
-
-        track.appendChild(img);
-        track.appendChild(info);
-        container.appendChild(track);
-      });
-    }
-
-    async function update() {
-      await fetchNowPlaying();
-      await fetchPlaylist();
-    }
-
-    update();
-    setInterval(update, 10000);
+    fetchData();
+    setInterval(fetchData, 15000);
   </script>
 </body>
 </html>
