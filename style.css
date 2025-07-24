@@ -15,8 +15,9 @@ body {
   display: flex;
   flex-direction: column;
   padding: 2vw;
-  overflow-y: auto;
+  overflow: hidden;
   box-sizing: border-box;
+  position: relative;
 }
 
 #right {
@@ -40,6 +41,9 @@ body {
 
 header {
   padding-bottom: 2vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #playlist-name {
@@ -50,8 +54,27 @@ header {
   letter-spacing: 1px;
 }
 
+#qr-section {
+  position: absolute;
+  top: 2vh;
+  right: 2vw;
+  text-align: center;
+}
+
+#qr-section img {
+  width: 6vw;
+  height: 6vw;
+}
+
+#qr-section p {
+  font-size: 1vw;
+  color: #1DB954;
+  margin-top: 0.5vh;
+}
+
 .now-playing {
   text-align: center;
+  flex-shrink: 0;
 }
 
 .cover {
@@ -76,9 +99,10 @@ header {
   background: #333;
   height: 1.2vh;
   width: 60%;
-  margin: 3vh auto;
+  margin: 2vh auto;
   border-radius: 5px;
   overflow: hidden;
+  position: relative;
 }
 
 #progress-bar {
@@ -88,43 +112,24 @@ header {
   transition: width 1s;
 }
 
-.up-next {
-  margin-top: 4vh;
+#time-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: 0 auto 2vh auto;
+  font-size: 1vw;
+  color: #888;
 }
 
-.up-next h2 {
-  font-size: 2vw;
-  margin-bottom: 2vh;
-  color: #1DB954;
-  text-align: center;
+/* up-next & playlist entfernt */
+.up-next {
+  display: none;
 }
 
 #next-tracks {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5vh;
-  align-items: center;
+  display: none;
 }
 
 .next-track {
-  background: #222;
-  padding: 1vh 2vw;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 90%;
-  text-align: left;
-  font-size: 1.2vw;
-  border-left: 4px solid #1DB954;
-  display: flex;
-  align-items: center;
-  gap: 1vw;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-
-.next-track img {
-  width: 4vw;
-  height: 4vw;
-  border-radius: 6px;
-  object-fit: cover;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  display: none;
 }
