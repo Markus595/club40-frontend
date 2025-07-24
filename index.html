@@ -10,6 +10,10 @@
   <div id="left">
     <header>
       <h1 id="playlist-name">Club 40² Party Playlist</h1>
+      <div id="qr-section">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://festify.us&size=150x150" alt="QR Code">
+        <p>Vote dein Song!</p>
+      </div>
     </header>
 
     <main>
@@ -22,11 +26,10 @@
         <div class="progress">
           <div id="progress-bar"></div>
         </div>
-      </section>
-
-      <section class="up-next">
-        <h2>Playlist</h2>
-        <div id="next-tracks"></div>
+        <div id="time-labels">
+          <span id="current-time">0:00</span>
+          <span id="total-time">0:00</span>
+        </div>
       </section>
     </main>
   </div>
@@ -36,46 +39,42 @@
   </div>
 
   <script>
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
     async function fetchData() {
       try {
         const now = await fetch("https://club-40-2-playlist.onrender.com/now-playing").then(res => res.json());
-        const playlist = await fetch("https://club-40-2-playlist.onrender.com/up-next").then(res => res.json());
 
         if (now.name) {
           document.getElementById("now-title").textContent = now.name;
           document.getElementById("now-artist").textContent = now.artist;
           document.getElementById("now-cover").src = now.image || "";
+
+          const progressBar = document.getElementById("progress-bar");
+          const currentTime = document.getElementById("current-time");
+          const totalTime = document.getElementById("total-time");
+
+          const progressMs = now.progress_ms || 0;
+          const durationMs = now.duration_ms || 1;
+
+          const progressPercent = (progressMs / durationMs) * 100;
+          progressBar.style.width = progressPercent + "%";
+
+          currentTime.textContent = formatTime(progressMs);
+          totalTime.textContent = formatTime(durationMs);
         }
-
-        const trackList = document.getElementById("next-tracks");
-        trackList.innerHTML = "";
-        playlist.tracks.forEach(track => {
-          const div = document.createElement("div");
-          div.className = "next-track";
-
-          const img = document.createElement("img");
-          img.src = track.image || "";
-          img.alt = "Cover";
-
-          const info = document.createElement("div");
-          const title = document.createElement("strong");
-          title.textContent = track.name;
-          const artist = document.createElement("p");
-          artist.textContent = track.artist;
-
-          info.appendChild(title);
-          info.appendChild(artist);
-          div.appendChild(img);
-          div.appendChild(info);
-          trackList.appendChild(div);
-        });
       } catch (err) {
         console.error("Fehler beim Laden der Daten:", err);
       }
     }
 
     fetchData();
-    setInterval(fetchData, 15000);
+    setInterval(fetchData, 5000);
   </script>
 </body>
 </html>
