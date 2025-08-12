@@ -10,26 +10,34 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
       background:#111;
       color:#fff;
-      display:grid;
-      grid-template-columns: 1.8fr 1.2fr;
-      gap:2vw;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
       padding:2vh 2vw 4vh;
-      align-items:start;
+      gap:2vh;
     }
     header{
-      grid-column: 1 / span 2;
       text-align:center;
-      margin-bottom:2vh;
     }
     header h1{
       font-size:clamp(28px,3vw,48px);
       font-weight:700;
+    }
+    main{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:flex-start;
+      gap:2vw;
+      width:100%;
+      max-width:1600px;
     }
     .now-playing{
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:1vh;
+      flex:1 1 500px;
     }
     .cover{
       width:min(48%,320px);
@@ -47,12 +55,26 @@
     .progress-container{
       width:min(70%,480px);
     }
+    #right{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex:1 1 400px;
+    }
+    .party-img{
+      max-width:100%;
+      max-height:400px;
+      object-fit:contain;
+      border-radius:14px;
+    }
+    /* QR Codes unten zentriert */
     #qr-row{
       display:flex;
       justify-content:center;
-      gap:1.5vw;
-      margin-top:1.5vh;
+      gap:2vw;
       flex-wrap:wrap;
+      margin-top:2vh;
+      width:100%;
     }
     #qr-row .qr-block{
       background:rgba(255,255,255,.04);
@@ -73,23 +95,13 @@
       font-weight:900;
       font-size:clamp(11px,0.9vw,14px);
     }
-    #right{
-      display:grid;
-      place-items:center;
-    }
-    .party-img{
-      max-width:100%;
-      max-height:400px;
-      object-fit:contain;
-      border-radius:14px;
-    }
   </style>
 </head>
 <body>
   <header>
     <h1>Club 40² Party Playlist</h1>
   </header>
-  <main id="now-col">
+  <main>
     <section class="now-playing" aria-live="polite">
       <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
       <div class="song-info">
@@ -100,15 +112,15 @@
         <div class="progress"><div id="progress-bar"></div></div>
         <div id="time-labels"><span id="progress-start">0:00</span><span id="progress-end">0:00</span></div>
       </div>
-      <div id="qr-row">
-        <div class="qr-block"><img class="qr-img" alt="QR-Code: Vote deinen Song" /><p class="qr-label">VOTE DEIN SONG!</p></div>
-        <div class="qr-block"><img class="qr-img" alt="QR-Code: Spotify Playlist" /><p class="qr-label">SPOTIFY PLAYLIST</p></div>
-        <div class="qr-block"><img class="qr-img" alt="QR-Code: Fotos hochladen" /><p class="qr-label">FOTOS HOCHLADEN</p></div>
-      </div>
     </section>
+    <div id="right">
+      <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
+    </div>
   </main>
-  <div id="right">
-    <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
+  <div id="qr-row">
+    <div class="qr-block"><img class="qr-img" alt="QR-Code: Vote deinen Song" /><p class="qr-label">VOTE DEIN SONG!</p></div>
+    <div class="qr-block"><img class="qr-img" alt="QR-Code: Spotify Playlist" /><p class="qr-label">SPOTIFY PLAYLIST</p></div>
+    <div class="qr-block"><img class="qr-img" alt="QR-Code: Fotos hochladen" /><p class="qr-label">FOTOS HOCHLADEN</p></div>
   </div>
   <script>
     const VOTE_URL = "https://festify.us";
