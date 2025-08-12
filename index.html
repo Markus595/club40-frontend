@@ -4,30 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Club 40² Party Playlist</title>
-  <meta name="color-scheme" content="dark light" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <script>
-    // Links (kannst du hier oder serverseitig setzen)
-    const VOTE_URL = "https://festify.us";
-    const DROPBOX_URL = "https://www.dropbox.com/request/z1j5rp2kRCpQ6v2R71Lz";
-    const SPOTIFY_URL = "https://open.spotify.com/playlist/1FRH27WUto6I32gBRJNVYp?pi=8Lk5CDHbTDO3U&si=Zo8FSnF0SJ_Hvy96org7Aw";
-  </script>
-
-  <!-- Header über QR + Now-Playing (spannt 2 Spalten) -->
   <header id="top">
     <h1 id="title">Club 40² Party Playlist</h1>
   </header>
 
-  <!-- Linke Spalte: 3 QRs untereinander -->
-  <div id="qr-col">
-    <div class="qr-block"><img class="qr-img" alt="QR-Code: Vote deinen Song" /><p class="qr-label">VOTE DEIN SONG!</p></div>
-    <div class="qr-block"><img class="qr-img" alt="QR-Code: Spotify Playlist" /><p class="qr-label">SPOTIFY PLAYLIST</p></div>
-    <div class="qr-block"><img class="qr-img" alt="QR-Code: Fotos hochladen" /><p class="qr-label">FOTOS HOCHLADEN</p></div>
-  </div>
-
-  <!-- Mittlere Spalte: Now Playing (Cover, Titel, Fortschritt) -->
   <main id="now-col">
     <section class="now-playing" aria-live="polite">
       <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
@@ -39,23 +22,30 @@
         <div class="progress"><div id="progress-bar"></div></div>
         <div id="time-labels"><span id="progress-start">0:00</span><span id="progress-end">0:00</span></div>
       </div>
+
+      <!-- QR Codes nebeneinander -->
+      <div id="qr-row">
+        <div class="qr-block"><img class="qr-img" alt="QR-Code: Vote deinen Song" /><p class="qr-label">VOTE DEIN SONG!</p></div>
+        <div class="qr-block"><img class="qr-img" alt="QR-Code: Spotify Playlist" /><p class="qr-label">SPOTIFY PLAYLIST</p></div>
+        <div class="qr-block"><img class="qr-img" alt="QR-Code: Fotos hochladen" /><p class="qr-label">FOTOS HOCHLADEN</p></div>
+      </div>
     </section>
   </main>
 
-  <!-- Rechte Spalte: Partybild zentriert, mit Luft oben/unten -->
   <div id="right">
     <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
   </div>
 
   <script>
-    // QR Codes setzen
+    const VOTE_URL = "https://festify.us";
+    const DROPBOX_URL = "https://www.dropbox.com/request/z1j5rp2kRCpQ6v2R71Lz";
+    const SPOTIFY_URL = "https://open.spotify.com/playlist/1FRH27WUto6I32gBRJNVYp?pi=8Lk5CDHbTDO3U&si=Zo8FSnF0SJ_Hvy96org7Aw";
     function setQR(el, url){ el.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(url); }
     const imgs = document.querySelectorAll('.qr-img');
     setQR(imgs[0], VOTE_URL);
     setQR(imgs[1], SPOTIFY_URL);
     setQR(imgs[2], DROPBOX_URL);
 
-    // Now Playing Logik
     const API = "https://club-40-2-playlist.onrender.com/now-playing";
     let lastFetchTs=0, progressAtFetch=0, durationMs=0;
     const els = {title:document.getElementById('now-title'), artist:document.getElementById('now-artist'), cover:document.getElementById('now-cover'), bar:document.getElementById('progress-bar'), start:document.getElementById('progress-start'), end:document.getElementById('progress-end')};
