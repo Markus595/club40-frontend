@@ -2,33 +2,30 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Club 40² Party Playlist</title>
+  <meta name="color-scheme" content="dark light" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="left">
     <header>
       <h1 id="playlist-name">Club 40² Party Playlist</h1>
-      <div id="qr-section">
-  <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?data=https://festify.us" alt="QR Code" />
-  <p>VOTE DEIN SONG!</p>
-</div>
-
+      <div id="qr-section" aria-label="Vote per QR-Code">
+        <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?data=https://festify.us" alt="QR-Code zum Voten" />
+        <p>VOTE DEIN SONG!</p>
+      </div>
     </header>
 
     <main>
-      <section class="now-playing">
+      <section class="now-playing" aria-live="polite">
         <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
         <div class="song-info">
-          <h3 id="now-title">Lade Titel...</h3>
+          <h3 id="now-title">Lade Titel…</h3>
           <p id="now-artist"></p>
         </div>
-
         <div class="progress-container">
-          <div class="progress">
-            <div id="progress-bar"></div>
-          </div>
+          <div class="progress"><div id="progress-bar"></div></div>
           <div id="time-labels">
             <span id="progress-start">0:00</span>
             <span id="progress-end">0:00</span>
@@ -43,40 +40,86 @@
   </div>
 
   <script>
-    async function fetchData() {
+    const API = "https://club-40-2-playlist.onrender.com/now-playing";
+    let lastFetchTs = 0;
+    let progressAtFetch = 0;
+    let durationMs = 0;
+    let trackKey = "";
+
+    const els = {
+      title: document.getElementById("now-title"),
+      artist: document.getElementById("now-artist"),
+      cover: document.getElementById("now-cover"),
+      bar: document.getElementById("progress-bar"),
+      start: document.getElementById("progress-start"),
+      end: document.getElementById("progress-end"),
+    };
+
+    function fmt(ms) {
+      const s = Math.max(0, Math.floor(ms / 1000));
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return m + ":" + (r < 10 ? "0" : "") + r;
+    }
+
+    function tick() {
+      if (!durationMs) return requestAnimationFrame(tick);
+      const now = Date.now();
+      const progressed = progressAtFetch + (now - lastFetchTs);
+      const clamped = Math.min(progressed, durationMs);
+
+      els.start.textContent = fmt(clamped);
+      els.end.textContent = fmt(durationMs);
+      const pct = durationMs ? (clamped / durationMs) * 100 : 0;
+      els.bar.style.width = pct.toFixed(2) + "%";
+
+      requestAnimationFrame(tick);
+    }
+
+    async function fetchNowPlaying() {
       try {
-        const res = await fetch("https://club-40-2-playlist.onrender.com/now-playing");
+        const res = await fetch(API, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const now = await res.json();
 
-        if (now.name) {
-          document.getElementById("now-title").textContent = now.name;
-          document.getElementById("now-artist").textContent = now.artist;
-          document.getElementById("now-cover").src = now.image || "";
+        if (!now || !now.name) return;
 
-          if (now.progress_ms && now.duration_ms) {
-            const progress = now.progress_ms;
-            const duration = now.duration_ms;
-            const percent = (progress / duration) * 100;
+        const key = [now.name, now.artist, now.image || ""].join("|");
+        const isNewTrack = key !== trackKey;
+        trackKey = key;
 
-            document.getElementById("progress-bar").style.width = `${percent}%`;
-            document.getElementById("progress-start").textContent = formatTime(progress);
-            document.getElementById("progress-end").textContent = formatTime(duration);
-          }
+        els.title.textContent = now.name;
+        els.artist.textContent = now.artist || "";
+        document.title = now.name + " – Club 40²";
+
+        els.cover.src = now.image || "";
+        els.cover.alt = now.name ? `Cover: ${now.name}` : "Aktuelles Cover";
+        els.cover.onerror = () => {
+          els.cover.onerror = null;
+          els.cover.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
+            <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'>
+              <rect width='100%' height='100%' fill='black'/>
+              <text x='50%' y='50%' fill='white' font-size='48' dominant-baseline='middle' text-anchor='middle'>No Cover</text>
+            </svg>`);
+        };
+
+        durationMs = Number(now.duration_ms) || 0;
+        progressAtFetch = Math.min(Number(now.progress_ms) || 0, durationMs);
+        lastFetchTs = Date.now();
+
+        if (isNewTrack) {
+          els.bar.style.width = ((progressAtFetch / (durationMs || 1)) * 100).toFixed(2) + "%";
+          els.start.textContent = fmt(progressAtFetch);
+          els.end.textContent = fmt(durationMs);
         }
       } catch (err) {
         console.error("Fehler beim Laden der Daten:", err);
       }
     }
 
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    }
-
-    fetchData();
-    setInterval(fetchData, 5000);
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying, 5000);
+    requestAnimationFrame(tick);
   </script>
 </body>
 </html>
