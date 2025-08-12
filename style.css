@@ -1,123 +1,58 @@
-**style.css** (angepasst für volle Sichtbarkeit; nutzt `100dvh` + Höhe-Queries)
+**style.css**
 ```css
-:root {
-  --bg: #0e0e0f;
-  --panel: #101113;
-  --text: #ffffff;
-  --muted: #b3b3b3;
-  --accent: #1DB954;
-  --track: #2a2a2a;
-  --shadow: 0 8px 30px rgba(0,0,0,.45);
-  --radius: 16px;
+:root{
+  --bg:#0e0e0f; --text:#fff; --muted:#b3b3b3; --accent:#1DB954; --track:#2a2a2a; --shadow:0 8px 30px rgba(0,0,0,.45); --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+
+/* Voll beamerfest: echte Viewport-Höhe, kein Abschneiden */
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  background:radial-gradient(1200px 800px at 10% -10%, rgba(29,185,84,.15), transparent 60%),
+             radial-gradient(900px 600px at 110% 0%, rgba(29,185,84,.08), transparent 60%), var(--bg);
+  color:var(--text);
+  display:grid; grid-template-columns:3fr 2fr; min-height:100dvh; height:100dvh; overflow:hidden;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+/* Linke Spalte */
+#left{ padding:3vh 3vw; display:grid; grid-template-rows:auto 1fr; row-gap:2vh; min-height:0; }
+header{ display:grid; grid-template-columns:1fr auto; align-items:start; column-gap:2vw; }
+#playlist-name{ font-size:clamp(24px,3vw,52px); font-weight:900; letter-spacing:.2px; text-shadow:0 1px 0 rgba(0,0,0,.3); }
 
-/* Wichtig: echte Viewport-Höhe (auch auf Mobile, Browser-UI wird berücksichtigt) */
-body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  background: radial-gradient(1200px 800px at 10% -10%, rgba(29,185,84,.15), transparent 60%),
-              radial-gradient(900px 600px at 110% 0%, rgba(29,185,84,.08), transparent 60%),
-              var(--bg);
-  color: var(--text);
-  display: grid;
-  grid-template-columns: 3fr 2fr; /* ~60/40 */
-  min-height: 100dvh;
-  height: 100dvh;
-  overflow: hidden; /* kein Body-Scroll, wir passen Inhalte an */
-}
+.qr-block{ text-align:center; }
+.qr-img{ width:clamp(90px,11vw,160px); height:auto; display:block; margin-inline:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.4)); background:#fff; padding:6px; border-radius:8px; }
+.qr-label{ margin-top:.4rem; font-weight:900; font-size:clamp(12px,1.1vw,18px); }
 
-#left {
-  padding: 3vh 3vw; /* etwas kompakter */
-  display: grid;
-  grid-template-rows: auto 1fr;
-  row-gap: 1.8vh;
-  min-height: 100%;
-}
+main{ display:grid; grid-template-rows:1fr auto; align-content:start; justify-items:center; gap:2vh; min-height:0; }
 
-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: start;
-  column-gap: 2vw;
-}
+.now-playing{ width:min(100%,1100px); background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); padding:clamp(14px,2.2vh,28px); display:grid; place-items:center; gap:clamp(12px,1.8vh,24px); min-height:0; }
+.cover{ width:min(50%,520px); aspect-ratio:1/1; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,.5); object-fit:cover; }
+.song-info{text-align:center}
+.song-info h3{ font-size:clamp(20px,2.4vw,38px); font-weight:900; }
+.song-info p{ font-size:clamp(14px,1.4vw,20px); color:var(--muted); margin-top:.25em; }
+.progress-container{ width:min(78%,720px); }
+.progress{ background:var(--track); height:10px; border-radius:6px; overflow:hidden; margin-top:6px; }
+#progress-bar{ height:100%; width:0%; background:var(--accent); transition:width .2s linear; }
+#time-labels{ display:flex; justify-content:space-between; margin-top:6px; color:var(--muted); font-size:clamp(12px,1.1vw,16px); }
 
-#playlist-name { font-size: clamp(20px, 2.6vw, 44px); font-weight: 800; letter-spacing: .2px; text-shadow: 0 1px 0 rgba(0,0,0,.3); }
+.aside-qr{ width:100%; display:grid; place-items:center; }
 
-#qr-section { text-align: center; }
-#qr-section img { width: clamp(84px, 10.5vw, 150px); height: auto; margin-inline: auto; filter: drop-shadow(0 6px 18px rgba(0,0,0,.4)); border-radius: 8px; background: #fff; padding: 6px; }
-#qr-section p { margin-top: .4rem; font-weight: 800; font-size: clamp(12px, 1.05vw, 18px); }
+/* Rechte Spalte */
+#right{ background:#000; display:grid; place-items:center; padding:3vh 3vw; min-height:0; }
+.party-card{ position:relative; width:100%; height:100%; display:grid; place-items:center; }
+.party-img{ max-width:92%; max-height:92%; object-fit:contain; border-radius:14px; box-shadow:var(--shadow); }
+.qr-float{ position:absolute; top:2.2vh; right:2.2vw; text-align:center; }
+.qr-float .qr-img{ width:clamp(84px,10vw,150px); }
+.qr-float-label{ margin-top:.35rem; font-weight:900; font-size:clamp(11px,1vw,16px); color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.5); }
 
-main { display: grid; align-content: start; justify-items: center; min-height: 0; }
+/* Breite kleiner: einspaltig */
+@media (max-width:1100px){ body{ grid-template-columns:1fr; } #right{ display:none; } .cover{ width:min(62%,480px); } .progress-container{ width:min(88%,720px); } }
 
-.now-playing {
-  width: min(100%, 1100px);
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: clamp(12px, 2.2vh, 28px);
-  display: grid;
-  row-gap: clamp(12px, 1.8vh, 24px);
-  min-height: 0; /* erlaubt Schrumpfen innerhalb der Höhe */
-}
+/* Höhe-Optimierungen – nie unten abgeschnitten */
+@media (max-height:900px){ #left{ padding:2.4vh 3vw; } .cover{ width:min(46%,460px); } }
+@media (max-height:780px){ #playlist-name{ font-size:clamp(20px,2.2vw,34px);} .qr-img{ width:clamp(78px,9vw,140px);} .cover{ width:min(42%,420px);} .progress{ height:8px;} }
+@media (max-height:660px){ #left{ padding:2vh 2.6vw; } header{ column-gap:1.4vw; } .cover{ width:min(38%,380px);} .song-info h3{ font-size:clamp(18px,2vw,28px);} }
+@media (max-height:600px){ .qr-label{ display:none; } .qr-float-label{ display:none; } .cover{ width:min(34%,340px);} }
 
-.cover { width: min(48%, 480px); aspect-ratio: 1 / 1; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.5); object-fit: cover; }
-
-.song-info { text-align: center; }
-.song-info h3 { font-size: clamp(20px, 2.2vw, 36px); font-weight: 900; }
-.song-info p { font-size: clamp(14px, 1.4vw, 20px); color: var(--muted); margin-top: .25em; }
-
-.progress-container { width: min(74%, 700px); }
-.progress { background: var(--track); height: 10px; border-radius: 6px; overflow: hidden; margin-top: 6px; }
-#progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width .2s linear; }
-#time-labels { display: flex; justify-content: space-between; margin-top: 6px; color: var(--muted); font-size: clamp(12px, 1.1vw, 16px); }
-
-#right { background: #000; display: grid; place-items: center; padding: 3vh 3vw; }
-#logo { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 14px; box-shadow: var(--shadow); }
-
-/* ——— Layout wechselt bei geringer Breite (z. B. Tablet/Phone) ——— */
-@media (max-width: 1100px) {
-  body { grid-template-columns: 1fr; }
-  #right { display: none; }
-  .cover { width: min(62%, 460px); }
-  .progress-container { width: min(86%, 700px); }
-}
-
-/* ——— Zusätzliche Anpassungen nach HÖHE, damit nie etwas abgeschnitten wird ——— */
-@media (max-height: 900px) {
-  #left { padding: 2.5vh 3vw; row-gap: 1.5vh; }
-  .cover { width: min(46%, 440px); }
-  .now-playing { padding: clamp(10px, 2vh, 24px); row-gap: clamp(10px, 1.6vh, 20px); }
-}
-
-@media (max-height: 780px) {
-  #playlist-name { font-size: clamp(18px, 2.2vw, 34px); }
-  #qr-section img { width: clamp(72px, 9vw, 132px); }
-  #qr-section p { font-size: clamp(11px, 1vw, 16px); }
-  .cover { width: min(42%, 400px); }
-  .song-info h3 { font-size: clamp(18px, 2vw, 30px); }
-  .song-info p { font-size: clamp(12px, 1.2vw, 18px); }
-  .progress { height: 8px; }
-}
-
-@media (max-height: 680px) {
-  #left { padding: 2vh 2.5vw; }
-  header { column-gap: 1.5vw; }
-  .cover { width: min(38%, 360px); }
-  .progress-container { width: min(82%, 620px); }
-}
-
-@media (max-height: 600px) {
-  #playlist-name { font-size: clamp(16px, 1.9vw, 26px); }
-  #qr-section img { width: clamp(64px, 8vw, 110px); }
-  #qr-section p { display: none; } /* Text ausblenden, um Höhe zu sparen */
-  .cover { width: min(34%, 320px); }
-  .song-info h3 { font-size: clamp(16px, 1.8vw, 24px); }
-  .song-info p { font-size: clamp(11px, 1vw, 16px); }
-}
-
-/* Nutzer mit Bewegungs-Reduktion */
-@media (prefers-reduced-motion: reduce) { #progress-bar { transition: none; } }
-```
+@media (prefers-reduced-motion:reduce){ #progress-bar{ transition:none } }
