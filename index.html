@@ -5,12 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Club 40² Party Playlist</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:#111;
+      color:#fff;
+      display:grid;
+      grid-template-columns: 2fr 1fr;
+      gap:2vw;
+      padding:2vh 2vw 4vh;
+      align-items:start;
+    }
+    .now-playing{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:1.5vh;
+    }
+    .cover{
+      width:min(80%,700px);
+      aspect-ratio:1/1;
+      border-radius:12px;
+    }
+    .song-info h3{
+      font-size:clamp(28px,3.5vw,54px);
+      text-align:center;
+    }
+    .progress-container{
+      width:min(85%,820px);
+    }
+    #qr-row{
+      display:flex;
+      justify-content:center;
+      gap:3vw;
+      margin-top:2.5vh;
+      flex-wrap:wrap;
+    }
+    #qr-row .qr-block{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+      padding:1vh 1vw;
+      text-align:center;
+    }
+    #qr-row .qr-img{
+      width:clamp(130px,11vw,180px);
+      height:auto;
+      background:#fff;
+      padding:6px;
+      border-radius:8px;
+    }
+    #qr-row .qr-label{
+      margin-top:.45rem;
+      font-weight:900;
+      font-size:clamp(13px,1.1vw,18px);
+    }
+    #right{
+      display:grid;
+      place-items:center;
+    }
+    .party-img{
+      max-width:94%;
+      max-height:90%;
+      object-fit:contain;
+      border-radius:14px;
+    }
+  </style>
 </head>
 <body>
-  <header id="top">
-    <h1 id="title">Club 40² Party Playlist</h1>
-  </header>
-
   <main id="now-col">
     <section class="now-playing" aria-live="polite">
       <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
@@ -22,8 +84,6 @@
         <div class="progress"><div id="progress-bar"></div></div>
         <div id="time-labels"><span id="progress-start">0:00</span><span id="progress-end">0:00</span></div>
       </div>
-
-      <!-- QR Codes nebeneinander -->
       <div id="qr-row">
         <div class="qr-block"><img class="qr-img" alt="QR-Code: Vote deinen Song" /><p class="qr-label">VOTE DEIN SONG!</p></div>
         <div class="qr-block"><img class="qr-img" alt="QR-Code: Spotify Playlist" /><p class="qr-label">SPOTIFY PLAYLIST</p></div>
@@ -31,11 +91,9 @@
       </div>
     </section>
   </main>
-
   <div id="right">
     <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
   </div>
-
   <script>
     const VOTE_URL = "https://festify.us";
     const DROPBOX_URL = "https://www.dropbox.com/request/z1j5rp2kRCpQ6v2R71Lz";
@@ -45,7 +103,6 @@
     setQR(imgs[0], VOTE_URL);
     setQR(imgs[1], SPOTIFY_URL);
     setQR(imgs[2], DROPBOX_URL);
-
     const API = "https://club-40-2-playlist.onrender.com/now-playing";
     let lastFetchTs=0, progressAtFetch=0, durationMs=0;
     const els = {title:document.getElementById('now-title'), artist:document.getElementById('now-artist'), cover:document.getElementById('now-cover'), bar:document.getElementById('progress-bar'), start:document.getElementById('progress-start'), end:document.getElementById('progress-end')};
