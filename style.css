@@ -1,140 +1,117 @@
-margin-bottom: 10px;/* style.css für Club 40 Beamer-Anzeige */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+**style.css** (optimierte Styles bleiben ausgelagert)
+```css
+:root {
+  --bg: #0e0e0f;
+  --panel: #101113;
+  --text: #ffffff;
+  --muted: #b3b3b3;
+  --accent: #1DB954;
+  --track: #2a2a2a;
+  --shadow: 0 8px 30px rgba(0,0,0,.45);
+  --radius: 16px;
 }
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #111;
-  color: #fff;
-  height: 100vh;
-  display: flex;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(29,185,84,.15), transparent 60%),
+              radial-gradient(900px 600px at 110% 0%, rgba(29,185,84,.08), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 0;
   overflow: hidden;
 }
 
-/* Layout */
 #left {
-  width: 60%;
   padding: 4vh 4vw;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  row-gap: 2vh;
 }
 
-#right {
-  width: 40%;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#logo {
-  max-width: 90%;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
-}
-
-/* Header */
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  
-  margin-bottom: 2vh;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  column-gap: 2vw;
 }
 
 #playlist-name {
-  font-size: 2.5vw;
-  font-weight: 700;
-  color: #fff;
+  font-size: clamp(24px, 3vw, 48px);
+  font-weight: 800;
+  letter-spacing: .2px;
+  text-shadow: 0 1px 0 rgba(0,0,0,.3);
 }
 
-#qr-section {
-  text-align: center;
-}
-
+#qr-section { text-align: center; }
 #qr-section img {
-  width: 12vw;              /* Dynamisch – ca. 1/4 der Coverbreite */
-  max-width: 120px;         /* Begrenzung auf sinnvolle Größe */
-  height: auto;             /* Höhe automatisch passend zur Breite */
+  width: clamp(96px, 12vw, 160px);
+  height: auto;
+  margin-inline: auto;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.4));
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px;
 }
-
 #qr-section p {
-  margin-top: 5px;
-  color: #fff;
-  font-size: 1em;
-  font-weight: bold;
+  margin-top: .5rem;
+  font-weight: 800;
+  font-size: clamp(14px, 1.2vw, 20px);
 }
 
-/* Now Playing */
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+main { display: grid; align-content: start; justify-items: center; }
 
 .now-playing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  width: min(100%, 1100px);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(16px, 2.6vw, 36px);
+  display: grid;
+  row-gap: clamp(16px, 2.2vw, 28px);
 }
 
 .cover {
-  max-width: 50%;
-  height: auto;
+  width: min(60%, 520px);
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.6);
-  margin-bottom: 30px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  object-fit: cover;
 }
 
-.song-info {
-  text-align: center;
-  margin-bottom: 30px;
+.song-info { text-align: center; }
+.song-info h3 { font-size: clamp(22px, 2.6vw, 40px); font-weight: 900; }
+.song-info p { font-size: clamp(16px, 1.6vw, 22px); color: var(--muted); margin-top: .3em; }
+
+.progress-container { width: min(80%, 760px); }
+.progress { background: var(--track); height: 12px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
+#progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width .2s linear; }
+#time-labels { display: flex; justify-content: space-between; margin-top: 8px; color: var(--muted); font-size: clamp(12px, 1.2vw, 16px); }
+
+#right {
+  background: #000;
+  display: grid; place-items: center;
+  padding: 4vh 4vw;
+}
+#logo {
+  max-width: 92%;
+  max-height: 92%;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
 }
 
-.song-info h3 {
-  font-size: 2em;
-  font-weight: bold;
-  margin-bottom: 0.5em;
+@media (max-width: 1100px) {
+  body { grid-template-columns: 1fr; }
+  #right { display: none; }
+  .cover { width: min(72%, 520px); }
+  .progress-container { width: min(88%, 760px); }
 }
 
-.song-info p {
-  font-size: 1.2em;
-  color: #ccc;
-}
-
-/* Fortschritt */
-.progress-container {
-  width: 60%;
-}
-
-.progress {
-  background: #333;
-  height: 10px;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
-#progress-bar {
-  background: #1DB954;
-  height: 100%;
-  width: 0%;
-  transition: width 0.5s;
-}
-
-#time-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9em;
-  color: #aaa;
-  margin-top: 10px;
-}
+@media (prefers-reduced-motion: reduce) {
+  #progress-bar { transition: none; }
