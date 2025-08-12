@@ -1,3 +1,5 @@
+**index.html**
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -8,12 +10,19 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <script>
+    // === Konfiguration: trage hier deine echten Links ein ===
+    const VOTE_URL = "https://festify.us";                 // Voting-Link
+    const DROPBOX_URL = "https://www.dropbox.com/request/XXXXX"; // Fotoupload-Link
+    const SPOTIFY_URL = "https://open.spotify.com/playlist/XXXXX"; // Spotify-Playlist
+  </script>
+
   <div id="left">
     <header>
       <h1 id="playlist-name">Club 40² Party Playlist</h1>
-      <div id="qr-section" aria-label="Vote per QR-Code">
-        <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?data=https://festify.us" alt="QR-Code zum Voten" />
-        <p>VOTE DEIN SONG!</p>
+      <div id="qr-vote" class="qr-block" aria-label="Vote per QR-Code">
+        <img class="qr-img" alt="QR-Code: Vote deinen Song" />
+        <p class="qr-label">VOTE DEIN SONG!</p>
       </div>
     </header>
 
@@ -32,20 +41,39 @@
           </div>
         </div>
       </section>
+
+      <aside class="aside-qr">
+        <div id="qr-photos" class="qr-block" aria-label="Fotos hochladen">
+          <img class="qr-img" alt="QR-Code: Fotos hochladen" />
+          <p class="qr-label">FOTOS HOCHLADEN</p>
+        </div>
+      </aside>
     </main>
   </div>
 
   <div id="right">
-    <img src="assets/Club_40.jpeg" alt="Club 40 Logo" id="logo" />
+    <div class="party-card">
+      <img src="assets/party.jpg" alt="Partyfoto" class="party-img" />
+      <div id="qr-spotify" class="qr-float" aria-label="Spotify-Playlist">
+        <img class="qr-img" alt="QR-Code: Spotify Playlist" />
+        <p class="qr-float-label">SPOTIFY PLAYLIST</p>
+      </div>
+    </div>
   </div>
 
   <script>
-    const API = "https://club-40-2-playlist.onrender.com/now-playing";
-    let lastFetchTs = 0;
-    let progressAtFetch = 0;
-    let durationMs = 0;
-    let trackKey = "";
+    // ==== QR-Codes setzen (serverlos) ====
+    function setQR(el, url) {
+      const api = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(url);
+      el.src = api;
+    }
+    setQR(document.querySelector('#qr-vote .qr-img'), VOTE_URL);
+    setQR(document.querySelector('#qr-photos .qr-img'), DROPBOX_URL);
+    setQR(document.querySelector('#qr-spotify .qr-img'), SPOTIFY_URL);
 
+    // ==== Now Playing Logik ====
+    const API = "https://club-40-2-playlist.onrender.com/now-playing";
+    let lastFetchTs = 0, progressAtFetch = 0, durationMs = 0, trackKey = "";
     const els = {
       title: document.getElementById("now-title"),
       artist: document.getElementById("now-artist"),
@@ -54,72 +82,24 @@
       start: document.getElementById("progress-start"),
       end: document.getElementById("progress-end"),
     };
-
-    function fmt(ms) {
-      const s = Math.max(0, Math.floor(ms / 1000));
-      const m = Math.floor(s / 60);
-      const r = s % 60;
-      return m + ":" + (r < 10 ? "0" : "") + r;
-    }
-
-    function tick() {
-      if (!durationMs) return requestAnimationFrame(tick);
-      const now = Date.now();
-      const progressed = progressAtFetch + (now - lastFetchTs);
-      const clamped = Math.min(progressed, durationMs);
-
-      els.start.textContent = fmt(clamped);
-      els.end.textContent = fmt(durationMs);
-      const pct = durationMs ? (clamped / durationMs) * 100 : 0;
-      els.bar.style.width = pct.toFixed(2) + "%";
-
-      requestAnimationFrame(tick);
-    }
-
-    async function fetchNowPlaying() {
-      try {
-        const res = await fetch(API, { cache: "no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
+    function fmt(ms){ const s=Math.max(0,Math.floor(ms/1000)); const m=Math.floor(s/60); const r=s%60; return m+":"+(r<10?"0":"")+r; }
+    function tick(){ if(!durationMs){ return requestAnimationFrame(tick);} const now=Date.now(); const progressed=progressAtFetch+(now-lastFetchTs); const clamped=Math.min(progressed,durationMs); els.start.textContent=fmt(clamped); els.end.textContent=fmt(durationMs); const pct=durationMs?(clamped/durationMs)*100:0; els.bar.style.width=pct.toFixed(2)+"%"; requestAnimationFrame(tick); }
+    async function fetchNowPlaying(){
+      try{
+        const res = await fetch(API,{cache:"no-store"});
+        if(!res.ok) throw new Error("HTTP "+res.status);
         const now = await res.json();
-
-        if (!now || !now.name) return;
-
-        const key = [now.name, now.artist, now.image || ""].join("|");
-        const isNewTrack = key !== trackKey;
-        trackKey = key;
-
-        els.title.textContent = now.name;
-        els.artist.textContent = now.artist || "";
-        document.title = now.name + " – Club 40²";
-
-        els.cover.src = now.image || "";
-        els.cover.alt = now.name ? `Cover: ${now.name}` : "Aktuelles Cover";
-        els.cover.onerror = () => {
-          els.cover.onerror = null;
-          els.cover.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
-            <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'>
-              <rect width='100%' height='100%' fill='black'/>
-              <text x='50%' y='50%' fill='white' font-size='48' dominant-baseline='middle' text-anchor='middle'>No Cover</text>
-            </svg>`);
-        };
-
-        durationMs = Number(now.duration_ms) || 0;
-        progressAtFetch = Math.min(Number(now.progress_ms) || 0, durationMs);
-        lastFetchTs = Date.now();
-
-        if (isNewTrack) {
-          els.bar.style.width = ((progressAtFetch / (durationMs || 1)) * 100).toFixed(2) + "%";
-          els.start.textContent = fmt(progressAtFetch);
-          els.end.textContent = fmt(durationMs);
-        }
-      } catch (err) {
-        console.error("Fehler beim Laden der Daten:", err);
-      }
+        if(!now||!now.name) return;
+        const key=[now.name,now.artist,now.image||""].join("|");
+        const isNew = key!==trackKey; trackKey=key;
+        els.title.textContent=now.name; els.artist.textContent=now.artist||""; document.title = now.name+" – Club 40²";
+        els.cover.src = now.image || ""; els.cover.alt = now.name?`Cover: ${now.name}`:"Aktuelles Cover";
+        els.cover.onerror = ()=>{ els.cover.onerror=null; els.cover.src = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'><rect width='100%' height='100%' fill='black'/><text x='50%' y='50%' fill='white' font-size='48' dominant-baseline='middle' text-anchor='middle'>No Cover</text></svg>"); };
+        durationMs = Number(now.duration_ms)||0; progressAtFetch = Math.min(Number(now.progress_ms)||0, durationMs); lastFetchTs = Date.now();
+        if(isNew){ els.bar.style.width=((progressAtFetch/(durationMs||1))*100).toFixed(2)+"%"; els.start.textContent=fmt(progressAtFetch); els.end.textContent=fmt(durationMs); }
+      }catch(err){ console.error("Fehler beim Laden der Daten:", err); }
     }
-
-    fetchNowPlaying();
-    setInterval(fetchNowPlaying, 5000);
-    requestAnimationFrame(tick);
+    fetchNowPlaying(); setInterval(fetchNowPlaying,5000); requestAnimationFrame(tick);
   </script>
 </body>
 </html>
