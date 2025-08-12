@@ -55,6 +55,26 @@
     .progress-container{
       width:min(70%,480px);
     }
+    .progress{
+      background:#333;
+      height:10px;
+      border-radius:5px;
+      overflow:hidden;
+      margin-top:5px;
+      margin-bottom:5px;
+    }
+    #progress-bar{
+      background:#1DB954;
+      height:100%;
+      width:0%;
+      transition:width 0.5s linear;
+    }
+    #time-labels{
+      display:flex;
+      justify-content:space-between;
+      font-size:0.9em;
+      color:#aaa;
+    }
     #right{
       display:flex;
       justify-content:center;
@@ -71,7 +91,7 @@
     #qr-row{
       display:flex;
       justify-content:center;
-      gap:2vw;
+      gap:4vw;
       flex-wrap:wrap;
       margin-top:2vh;
       width:100%;
@@ -131,13 +151,40 @@
     setQR(imgs[0], VOTE_URL);
     setQR(imgs[1], SPOTIFY_URL);
     setQR(imgs[2], DROPBOX_URL);
+
     const API = "https://club-40-2-playlist.onrender.com/now-playing";
     let lastFetchTs=0, progressAtFetch=0, durationMs=0;
     const els = {title:document.getElementById('now-title'), artist:document.getElementById('now-artist'), cover:document.getElementById('now-cover'), bar:document.getElementById('progress-bar'), start:document.getElementById('progress-start'), end:document.getElementById('progress-end')};
     function fmt(ms){ const s=Math.max(0,Math.floor(ms/1000)); const m=Math.floor(s/60); const r=s%60; return m+":"+(r<10?"0":"")+r; }
-    function tick(){ if(!durationMs) return requestAnimationFrame(tick); const now=Date.now(); const progressed=progressAtFetch+(now-lastFetchTs); const clamped=Math.min(progressed,durationMs); els.start.textContent=fmt(clamped); els.end.textContent=fmt(durationMs); els.bar.style.width=(clamped/(durationMs||1))*100+"%"; requestAnimationFrame(tick); }
-    async function fetchNowPlaying(){ try{ const res=await fetch(API,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status); const data=await res.json(); if(!data||!data.name) return; els.title.textContent=data.name; els.artist.textContent=data.artist||''; els.cover.src=data.image||''; durationMs=Number(data.duration_ms)||0; progressAtFetch=Math.min(Number(data.progress_ms)||0,durationMs); lastFetchTs=Date.now(); } catch(e){ console.error('Fehler beim Laden der Daten:', e);} }
-    fetchNowPlaying(); setInterval(fetchNowPlaying,5000); requestAnimationFrame(tick);
+    function tick(){
+      if(!durationMs) return requestAnimationFrame(tick);
+      const now=Date.now();
+      const progressed=progressAtFetch+(now-lastFetchTs);
+      const clamped=Math.min(progressed,durationMs);
+      els.start.textContent=fmt(clamped);
+      els.end.textContent=fmt(durationMs - clamped);
+      els.bar.style.width=(clamped/(durationMs||1))*100+"%";
+      requestAnimationFrame(tick);
+    }
+    async function fetchNowPlaying(){
+      try{
+        const res=await fetch(API,{cache:'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data=await res.json();
+        if(!data||!data.name) return;
+        els.title.textContent=data.name;
+        els.artist.textContent=data.artist||'';
+        els.cover.src=data.image||'';
+        durationMs=Number(data.duration_ms)||0;
+        progressAtFetch=Math.min(Number(data.progress_ms)||0,durationMs);
+        lastFetchTs=Date.now();
+      } catch(e){
+        console.error('Fehler beim Laden der Daten:', e);
+      }
+    }
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying,5000);
+    requestAnimationFrame(tick);
   </script>
 </body>
 </html>
