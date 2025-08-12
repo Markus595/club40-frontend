@@ -9,20 +9,30 @@
 </head>
 <body>
   <script>
-    // === Konfiguration: trage hier deine echten Links ein ===
-    const VOTE_URL = "https://festify.us";                 // Voting-Link
-    const DROPBOX_URL = "https://www.dropbox.com/request/XXXXX"; // Fotoupload-Link
-    const SPOTIFY_URL = "https://open.spotify.com/playlist/XXXXX"; // Spotify-Playlist
+    const VOTE_URL = "https://festify.us";
+    const DROPBOX_URL = "https://www.dropbox.com/request/z1j5rp2kRCpQ6v2R71Lz";
+    const SPOTIFY_URL = "https://open.spotify.com/playlist/1FRH27WUto6I32gBRJNVYp?pi=8Lk5CDHbTDO3U&si=Zo8FSnF0SJ_Hvy96org7Aw";
   </script>
 
   <div id="left">
     <header>
       <h1 id="playlist-name">Club 40² Party Playlist</h1>
-      <div id="qr-vote" class="qr-block" aria-label="Vote per QR-Code">
+    </header>
+
+    <div class="qr-column">
+      <div id="qr-vote" class="qr-block">
         <img class="qr-img" alt="QR-Code: Vote deinen Song" />
         <p class="qr-label">VOTE DEIN SONG!</p>
       </div>
-    </header>
+      <div id="qr-spotify" class="qr-block">
+        <img class="qr-img" alt="QR-Code: Spotify Playlist" />
+        <p class="qr-label">SPOTIFY PLAYLIST</p>
+      </div>
+      <div id="qr-photos" class="qr-block">
+        <img class="qr-img" alt="QR-Code: Fotos hochladen" />
+        <p class="qr-label">FOTOS HOCHLADEN</p>
+      </div>
+    </div>
 
     <main>
       <section class="now-playing" aria-live="polite">
@@ -39,28 +49,16 @@
           </div>
         </div>
       </section>
-
-      <aside class="aside-qr">
-        <div id="qr-photos" class="qr-block" aria-label="Fotos hochladen">
-          <img class="qr-img" alt="QR-Code: Fotos hochladen" />
-          <p class="qr-label">FOTOS HOCHLADEN</p>
-        </div>
-      </aside>
     </main>
   </div>
 
   <div id="right">
     <div class="party-card">
-      <img src="assets/party.jpg" alt="Partyfoto" class="party-img" />
-      <div id="qr-spotify" class="qr-float" aria-label="Spotify-Playlist">
-        <img class="qr-img" alt="QR-Code: Spotify Playlist" />
-        <p class="qr-float-label">SPOTIFY PLAYLIST</p>
-      </div>
+      <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
     </div>
   </div>
 
   <script>
-    // ==== QR-Codes setzen (serverlos) ====
     function setQR(el, url) {
       const api = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(url);
       el.src = api;
@@ -69,7 +67,6 @@
     setQR(document.querySelector('#qr-photos .qr-img'), DROPBOX_URL);
     setQR(document.querySelector('#qr-spotify .qr-img'), SPOTIFY_URL);
 
-    // ==== Now Playing Logik ====
     const API = "https://club-40-2-playlist.onrender.com/now-playing";
     let lastFetchTs = 0, progressAtFetch = 0, durationMs = 0, trackKey = "";
     const els = {
@@ -101,4 +98,3 @@
   </script>
 </body>
 </html>
-
