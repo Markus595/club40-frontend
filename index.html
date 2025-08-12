@@ -6,6 +6,46 @@
   <title>Club 40² Party Playlist</title>
   <meta name="color-scheme" content="dark light" />
   <link rel="stylesheet" href="style.css" />
+  <!-- Inline-Styles nur zur Vorschau in der Canvas. Lege dieselben Regeln zusätzlich in deine style.css ab. -->
+  <style>
+    :root{ --bg:#0e0e0f; --text:#fff; --muted:#b3b3b3; --accent:#1DB954; --track:#2a2a2a; --shadow:0 8px 30px rgba(0,0,0,.45); --radius:16px; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";background:radial-gradient(1200px 800px at 10% -10%, rgba(29,185,84,.15), transparent 60%),radial-gradient(900px 600px at 110% 0%, rgba(29,185,84,.08), transparent 60%),var(--bg);color:var(--text);display:grid;grid-template-columns: 0.9fr 1.6fr 1.5fr;grid-template-rows:auto 1fr;grid-template-areas: "top top right" "qr now right";min-height:100dvh;height:100dvh;gap:1.8vw;overflow:hidden;padding:2.4vh 2.6vw 3.2vh;}/* extra bottom padding so nothing is cut */
+    header#top{grid-area:top;display:flex;align-items:flex-start;}
+    #title{font-size:clamp(24px,3.4vw,56px);font-weight:900;letter-spacing:.2px;text-shadow:0 1px 0 rgba(0,0,0,.35);}
+
+    /* linke QR-Spalte */
+    #qr-col{grid-area:qr;display:grid;align-content:start;justify-items:center;row-gap:2.2vh;}
+    .qr-block{text-align:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2vh 1vw;box-shadow:var(--shadow);}
+    .qr-img{width:clamp(110px,10.5vw,180px);height:auto;background:#fff;padding:6px;border-radius:8px;display:block;}
+    .qr-label{margin-top:.45rem;font-weight:900;font-size:clamp(12px,1.05vw,18px)}
+
+    /* mittlere Now-Playing-Spalte */
+    #now-col{grid-area:now;display:grid;place-items:center;min-height:0}
+    .now-playing{width:min(100%, 1180px);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:var(--shadow);padding:clamp(14px,2.2vh,28px);display:grid;place-items:center;gap:clamp(12px,1.6vh,22px);min-height:0}
+    .cover{width:min(58%,540px);aspect-ratio:1/1;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5);object-fit:cover}
+    .song-info{text-align:center}
+    .song-info h3{font-size:clamp(20px,2.6vw,40px);font-weight:900}
+    .song-info p{font-size:clamp(14px,1.4vw,20px);color:var(--muted);margin-top:.25em}
+    .progress-container{width:min(80%,740px)}
+    .progress{background:var(--track);height:10px;border-radius:6px;overflow:hidden;margin-top:6px}
+    #progress-bar{height:100%;width:0%;background:var(--accent);transition:width .2s linear}
+    #time-labels{display:flex;justify-content:space-between;margin-top:6px;color:var(--muted);font-size:clamp(12px,1.1vw,16px)}
+
+    /* rechte Bild-Spalte */
+    #right{grid-area:right;background:#000;border-radius:16px;box-shadow:var(--shadow);display:grid;place-items:center;padding:2.4vh 1.8vw}
+    .party-img{max-width:94%;max-height:90%;object-fit:contain;border-radius:14px;}
+
+    /* Responsiv: schmale Breite -> zweizeilig */
+    @media (max-width:1200px){ body{grid-template-columns:1fr 1fr;grid-template-areas:"top top" "qr now";}
+      #right{display:none}.cover{width:min(64%,520px)}.progress-container{width:min(88%,720px)} }
+
+    /* Geringe Höhe -> alles kompakter, aber mit Boden-Luft */
+    @media (max-height:760px){ .qr-img{width:clamp(96px,9.2vw,160px)} .cover{width:min(50%,460px)} .progress{height:8px} }
+    @media (max-height:640px){ .qr-label{display:none} .song-info h3{font-size:clamp(18px,2.2vw,30px)} .cover{width:min(44%,400px)} }
+    @media (prefers-reduced-motion:reduce){ #progress-bar{transition:none} }
+  </style>
 </head>
 <body>
   <script>
@@ -14,86 +54,64 @@
     const SPOTIFY_URL = "https://open.spotify.com/playlist/1FRH27WUto6I32gBRJNVYp?pi=8Lk5CDHbTDO3U&si=Zo8FSnF0SJ_Hvy96org7Aw";
   </script>
 
-  <div id="left">
-    <header>
-      <h1 id="playlist-name">Club 40² Party Playlist</h1>
-    </header>
+  <!-- Header über QR + Now-Playing (spanning 2 Spalten) -->
+  <header id="top">
+    <h1 id="title">Club 40² Party Playlist</h1>
+  </header>
 
-    <div class="qr-column">
-      <div id="qr-vote" class="qr-block">
-        <img class="qr-img" alt="QR-Code: Vote deinen Song" />
-        <p class="qr-label">VOTE DEIN SONG!</p>
-      </div>
-      <div id="qr-spotify" class="qr-block">
-        <img class="qr-img" alt="QR-Code: Spotify Playlist" />
-        <p class="qr-label">SPOTIFY PLAYLIST</p>
-      </div>
-      <div id="qr-photos" class="qr-block">
-        <img class="qr-img" alt="QR-Code: Fotos hochladen" />
-        <p class="qr-label">FOTOS HOCHLADEN</p>
-      </div>
+  <!-- Linke Spalte: 3 QRs untereinander -->
+  <div id="qr-col">
+    <div id="qr-vote" class="qr-block">
+      <img class="qr-img" alt="QR-Code: Vote deinen Song" />
+      <p class="qr-label">VOTE DEIN SONG!</p>
     </div>
-
-    <main>
-      <section class="now-playing" aria-live="polite">
-        <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
-        <div class="song-info">
-          <h3 id="now-title">Lade Titel…</h3>
-          <p id="now-artist"></p>
-        </div>
-        <div class="progress-container">
-          <div class="progress"><div id="progress-bar"></div></div>
-          <div id="time-labels">
-            <span id="progress-start">0:00</span>
-            <span id="progress-end">0:00</span>
-          </div>
-        </div>
-      </section>
-    </main>
+    <div id="qr-spotify" class="qr-block">
+      <img class="qr-img" alt="QR-Code: Spotify Playlist" />
+      <p class="qr-label">SPOTIFY PLAYLIST</p>
+    </div>
+    <div id="qr-photos" class="qr-block">
+      <img class="qr-img" alt="QR-Code: Fotos hochladen" />
+      <p class="qr-label">FOTOS HOCHLADEN</p>
+    </div>
   </div>
 
+  <!-- Mittlere Spalte: Now Playing (Cover, Titel, Fortschritt) -->
+  <main id="now-col">
+    <section class="now-playing" aria-live="polite">
+      <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
+      <div class="song-info">
+        <h3 id="now-title">Lade Titel…</h3>
+        <p id="now-artist"></p>
+      </div>
+      <div class="progress-container">
+        <div class="progress"><div id="progress-bar"></div></div>
+        <div id="time-labels">
+          <span id="progress-start">0:00</span>
+          <span id="progress-end">0:00</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rechte Spalte: Partybild zentriert, mit Luft oben/unten -->
   <div id="right">
-    <div class="party-card">
-      <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
-    </div>
+    <img src="https://raw.githubusercontent.com/Markus595/club40-frontend/refs/heads/main/assets/Club_40.jpeg" alt="Partyfoto" class="party-img" />
   </div>
 
   <script>
-    function setQR(el, url) {
-      const api = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(url);
-      el.src = api;
-    }
+    // QR Codes
+    function setQR(el, url){ const api = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(url); el.src = api; }
     setQR(document.querySelector('#qr-vote .qr-img'), VOTE_URL);
-    setQR(document.querySelector('#qr-photos .qr-img'), DROPBOX_URL);
     setQR(document.querySelector('#qr-spotify .qr-img'), SPOTIFY_URL);
+    setQR(document.querySelector('#qr-photos .qr-img'), DROPBOX_URL);
 
+    // Now Playing
     const API = "https://club-40-2-playlist.onrender.com/now-playing";
-    let lastFetchTs = 0, progressAtFetch = 0, durationMs = 0, trackKey = "";
-    const els = {
-      title: document.getElementById("now-title"),
-      artist: document.getElementById("now-artist"),
-      cover: document.getElementById("now-cover"),
-      bar: document.getElementById("progress-bar"),
-      start: document.getElementById("progress-start"),
-      end: document.getElementById("progress-end"),
-    };
+    let lastFetchTs=0, progressAtFetch=0, durationMs=0, trackKey="";
+    const els = {title:document.getElementById('now-title'), artist:document.getElementById('now-artist'), cover:document.getElementById('now-cover'), bar:document.getElementById('progress-bar'), start:document.getElementById('progress-start'), end:document.getElementById('progress-end')};
     function fmt(ms){ const s=Math.max(0,Math.floor(ms/1000)); const m=Math.floor(s/60); const r=s%60; return m+":"+(r<10?"0":"")+r; }
     function tick(){ if(!durationMs){ return requestAnimationFrame(tick);} const now=Date.now(); const progressed=progressAtFetch+(now-lastFetchTs); const clamped=Math.min(progressed,durationMs); els.start.textContent=fmt(clamped); els.end.textContent=fmt(durationMs); const pct=durationMs?(clamped/durationMs)*100:0; els.bar.style.width=pct.toFixed(2)+"%"; requestAnimationFrame(tick); }
-    async function fetchNowPlaying(){
-      try{
-        const res = await fetch(API,{cache:"no-store"});
-        if(!res.ok) throw new Error("HTTP "+res.status);
-        const now = await res.json();
-        if(!now||!now.name) return;
-        const key=[now.name,now.artist,now.image||""].join("|");
-        const isNew = key!==trackKey; trackKey=key;
-        els.title.textContent=now.name; els.artist.textContent=now.artist||""; document.title = now.name+" – Club 40²";
-        els.cover.src = now.image || ""; els.cover.alt = now.name?`Cover: ${now.name}`:"Aktuelles Cover";
-        els.cover.onerror = ()=>{ els.cover.onerror=null; els.cover.src = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'><rect width='100%' height='100%' fill='black'/><text x='50%' y='50%' fill='white' font-size='48' dominant-baseline='middle' text-anchor='middle'>No Cover</text></svg>"); };
-        durationMs = Number(now.duration_ms)||0; progressAtFetch = Math.min(Number(now.progress_ms)||0, durationMs); lastFetchTs = Date.now();
-        if(isNew){ els.bar.style.width=((progressAtFetch/(durationMs||1))*100).toFixed(2)+"%"; els.start.textContent=fmt(progressAtFetch); els.end.textContent=fmt(durationMs); }
-      }catch(err){ console.error("Fehler beim Laden der Daten:", err); }
-    }
+    async function fetchNowPlaying(){ try{ const res=await fetch(API,{cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status); const data=await res.json(); if(!data||!data.name) return; const key=[data.name,data.artist,data.image||''].join('|'); const isNew = key!==trackKey; trackKey=key; els.title.textContent=data.name; els.artist.textContent=data.artist||''; document.title=data.name+" – Club 40²"; els.cover.src=data.image||''; els.cover.alt=data.name?`Cover: ${data.name}`:'Aktuelles Cover'; els.cover.onerror=()=>{els.cover.onerror=null; els.cover.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'><rect width='100%' height='100%' fill='black'/><text x='50%' y='50%' fill='white' font-size='48' dominant-baseline='middle' text-anchor='middle'>No Cover</text></svg>")}; durationMs=Number(data.duration_ms)||0; progressAtFetch=Math.min(Number(data.progress_ms)||0,durationMs); lastFetchTs=Date.now(); if(isNew){ els.bar.style.width=((progressAtFetch/(durationMs||1))*100).toFixed(2)+'%'; els.start.textContent=fmt(progressAtFetch); els.end.textContent=fmt(durationMs);} }catch(e){ console.error('Fehler beim Laden der Daten:', e);} }
     fetchNowPlaying(); setInterval(fetchNowPlaying,5000); requestAnimationFrame(tick);
   </script>
 </body>
