@@ -16,49 +16,62 @@
       padding:2vh 2vw 4vh;
       align-items:start;
     }
+    header{
+      grid-column: 1 / span 2;
+      text-align:center;
+      margin-bottom:2vh;
+    }
+    header h1{
+      font-size:clamp(28px,3vw,48px);
+      font-weight:700;
+    }
     .now-playing{
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:1.5vh;
+      gap:1vh;
     }
     .cover{
-      width:min(80%,700px);
+      width:min(60%,420px);
       aspect-ratio:1/1;
       border-radius:12px;
     }
     .song-info h3{
-      font-size:clamp(28px,3.5vw,54px);
+      font-size:clamp(20px,2.2vw,36px);
+      text-align:center;
+    }
+    .song-info p{
+      font-size:clamp(14px,1.5vw,22px);
       text-align:center;
     }
     .progress-container{
-      width:min(85%,820px);
+      width:min(70%,600px);
     }
-    #qr-row{
+    #qr-column{
       display:flex;
-      justify-content:center;
-      gap:3vw;
-      margin-top:2.5vh;
-      flex-wrap:wrap;
+      flex-direction:column;
+      align-items:center;
+      gap:1.5vh;
+      margin-top:1.5vh;
     }
-    #qr-row .qr-block{
+    #qr-column .qr-block{
       background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.08);
       border-radius:12px;
-      padding:1vh 1vw;
+      padding:0.5vh 0.5vw;
       text-align:center;
     }
-    #qr-row .qr-img{
-      width:clamp(130px,11vw,180px);
+    #qr-column .qr-img{
+      width:clamp(100px,9vw,150px);
       height:auto;
       background:#fff;
-      padding:6px;
+      padding:4px;
       border-radius:8px;
     }
-    #qr-row .qr-label{
-      margin-top:.45rem;
+    #qr-column .qr-label{
+      margin-top:.3rem;
       font-weight:900;
-      font-size:clamp(13px,1.1vw,18px);
+      font-size:clamp(11px,1vw,15px);
     }
     #right{
       display:grid;
@@ -73,6 +86,9 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>Club 40² Party Playlist</h1>
+  </header>
   <main id="now-col">
     <section class="now-playing" aria-live="polite">
       <img src="" alt="Aktuelles Cover" class="cover" id="now-cover" />
@@ -84,7 +100,7 @@
         <div class="progress"><div id="progress-bar"></div></div>
         <div id="time-labels"><span id="progress-start">0:00</span><span id="progress-end">0:00</span></div>
       </div>
-      <div id="qr-row">
+      <div id="qr-column">
         <div class="qr-block"><img class="qr-img" alt="QR-Code: Vote deinen Song" /><p class="qr-label">VOTE DEIN SONG!</p></div>
         <div class="qr-block"><img class="qr-img" alt="QR-Code: Spotify Playlist" /><p class="qr-label">SPOTIFY PLAYLIST</p></div>
         <div class="qr-block"><img class="qr-img" alt="QR-Code: Fotos hochladen" /><p class="qr-label">FOTOS HOCHLADEN</p></div>
